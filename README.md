@@ -1,6 +1,6 @@
 # ATS-F
 
-Versatile, modular, flexible Attendance Taking System using Firebase. 
+Versatile, modular, flexible Attendance Taking System using Firebase.
 
 The goals of this system are to:
 
@@ -10,9 +10,24 @@ The goals of this system are to:
 - Easy to use administration interface directly through a web app hosted by Firebase
   - No need to connect to servers, minimal IT knowledge required to monitor this system
 - Powerful location capability to make sure that all personnel are accounted for in a geofence
+- Fingerprinting capability to prevent a user from spoofing someone else's attendance
 - Hassle free deployment of server assets through Firebase
 
-The secondary goals of this system are:
+## Key Considerations
+
+Some of the key considerations for this system are:
+
+### Cost effective & Maintenance Free
+
+The system must be cost effective, or preferably even free. It should require as little maintenance as possible
+
+### Ease of use
+
+Ease of use must be for both the user and the administrator. 
+
+For administrators, the UI of choice is through Google Sheets with Google Apps Script API for maximum flexibility.
+
+For users, it is a Firebase Hosting hosted web application.
 
 ## Features
 
@@ -89,13 +104,13 @@ WIP
 
 Pretaining to attendance codes, these will be the codes used:
 
-* Present: ZATZ
-* Reporting Sick: PMED_RS
-* Medical Leave (unverified): PMED_U
-* Medical Leave (verified): PMED
-* Vacation Leave (unverified): PANN_U
-* Vacation Leave (verified): PANN
-* AWOL: UAWL
+- Present: ZATZ
+- Medical Leave (calling in sick): PMED_RS
+- Medical Leave (unverified MC): PMED_U
+- Medical Leave (verified MC): PMED
+- Vacation Leave (unverified): PANN_U
+- Vacation Leave (verified): PANN
+- AWOL: UAWL
 
 #### Table: spec_record
 
