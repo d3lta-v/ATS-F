@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	//=========================
+    // Functions
+    
+  	function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function getRoles() {
+      return get(/databases/$(database)/documents/roles/$(request.auth.uid)).data;
+    }
+    
+    function hasRole(role) {
+    	// Enforces sign in and role
+      return isSignedIn() && getRoles()[role] == true;
+    }
+  
+  	//=========================
+    // Rule matching
+    
+  	match /temperatures/{temperature} {
+    	// GET: only OP and admin can retrieve individual entries
+      // LIST: only OP and admin can query the records, and ordinary users can query their own
+      // CREATE: any users can create for themselves, admins can create for anybody
+      // UPDATE: only OP can update their own, and admins can update for anybody
+      // DELETE: only OP can delete their own records, and admins can delete anyone's record
+      allow get: if resource.data.author == request.auth.uid || hasRole('admin');
+      allow list: if resource.data.author == request.auth.uid || hasRole('admin');
+      allow create: if request.resource.data.author == request.auth.uid || hasRole('admin');
+      allow update: if resource.data.author == request.auth.uid || hasRole('admin');
+      allow delete: if resource.data.author == request.auth.uid || hasRole('admin');
+    }
+    
+    match /roles/{user} {
+    	// Allow users to read their own roles, but only
+    	// update it if they have the admin role
+      // GET: only the OP can retrieve their own roles, but admins can retrieve anyone's roles
+      // LIST: only admins can query the roles
+      // UPDATE: only admins can update user roles
+      // CREATE: everyone can create non-admin roles for themselves, but admins can create any roles for anyone
+      // DELETE: only admins can delete user roles
+      allow get: if request.auth.uid == user || hasRole('admin');
+      allow list: if hasRole('admin');
+      allow update: if hasRole('admin');
+      allow create: if !request.resource.data.keys().hasAny(['admin']) && request.auth.uid == user || hasRole('admin');
+    	allow delete: if hasRole('admin');
+    }
+    
+    match /configuration/{config} {
+    	// The configuration table can only be accessed by admins
+    	allow read, write: if hasRole('admin');
+    }
+
+    match /namemap/{mapping} {
+      // The namemap table can only be accessed by admins
+    	allow read, write: if hasRole('admin');
+    }
+
+    match /location/{loc} {
+      // The locations table can only be accessed by admins
+      allow read, write: if hasRole('admin');
+    }
+
+    // Deny all, if other conditions fall through
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

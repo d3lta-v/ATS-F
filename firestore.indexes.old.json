@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    { 
+      "collectionGroup": "temperatures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "author", "order": "ASCENDING" },
+        { "fieldPath": "submitted", "order": "ASCENDING" }
+      ]
+    },
+    { 
+      "collectionGroup": "temperatures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "phoneNumber", "order": "ASCENDING" },
+        { "fieldPath": "submitted", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
